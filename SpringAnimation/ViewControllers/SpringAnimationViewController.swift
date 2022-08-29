@@ -6,24 +6,48 @@
 //
 
 import UIKit
+import Spring
 
 class SpringAnimationViewController: UIViewController {
-
+    
+    private var animationSettings = AnimationSettings()
+    
+    @IBOutlet var springView: SpringView!
+    @IBOutlet var labelPreset: UILabel!
+    @IBOutlet var labelCurve: UILabel!
+    @IBOutlet var labelForce: UILabel!
+    @IBOutlet var labelDuration: UILabel!
+    @IBOutlet var labelDelay: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        springView.layer.cornerRadius = 10
+        animationSettings.makeRandomSettings()
+        renameLabels()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    @IBAction func runAnimation(_ sender: SpringButton) {
+        if animationSettings.currentAnimation != "" {
+            springView.animation = animationSettings.currentAnimation
+        }
+        
+        if animationSettings.currentCurve != "" {
+            springView.curve = animationSettings.currentCurve
+        }
+        springView.force = animationSettings.currentForce
+        springView.duration = animationSettings.currentDuration
+        springView.delay = animationSettings.currentDelay
+        springView.animate()
+        renameLabels()
+        sender.setTitle("Run \(animationSettings.nextAnimation)", for: .normal)
+        animationSettings.makeRandomSettings()
     }
-    */
-
+    
+    private func renameLabels() {
+        labelPreset.text = "Preset: \(animationSettings.currentAnimation)"
+        labelCurve.text = "Curve: \(animationSettings.currentCurve)"
+        labelForce.text = "Force: \(String(format:"%.3f", animationSettings.currentForce))"
+        labelDuration.text = "Duration: \(String(format: "%.3f", animationSettings.currentDuration))"
+        labelDelay.text = "Delay: \(String(format: "%.3f", animationSettings.currentDelay))"
+    }
 }
